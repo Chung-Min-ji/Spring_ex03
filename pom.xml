@@ -15,6 +15,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <java-version>1.8</java-version>
         <org.aspectj-version>1.6.10</org.aspectj-version>
+        <log4j2-version>2.14.1</log4j2-version>
         <org.slf4j-version>1.6.6</org.slf4j-version>
         <org.springframework-version>5.2.3.RELEASE</org.springframework-version>
     </properties>
@@ -76,13 +77,34 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- jstl -->
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
 
-        <!-- =========== Log4j =========== -->
+
+        <!-- =========== Logging =========== -->
         <!-- Log4j -->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.12</version>
+        </dependency>
+
+        <!-- log4j2 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2-version}</version>
+        </dependency>
+
+        <!-- log4j-core -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2-version}</version>
         </dependency>
 
         <!-- Log4jdbc-log4j2 -->
@@ -162,13 +184,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>${org.slf4j-version}</version>
-        </dependency>
-
-        <!-- jstl -->
-        <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
         </dependency>
 
     </dependencies>

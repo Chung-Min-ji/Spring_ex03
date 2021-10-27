@@ -22,6 +22,7 @@
         <property name="driverClassName"
                   value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
         <property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE"/>
+
         <property name="username" value="book_ex"/>
         <property name="password" value="oracle!!!"/>
     </bean>
@@ -31,8 +32,8 @@
           class="com.zaxxer.hikari.HikariDataSource"
           destroy-method="close"> <!-- 해제할 때 어떤 메소드로 해제하는지? -> "close()"메소드로 해제함!-->
 
-<!--        &lt;!&ndash;생성자의 parameter로, 첫번째 등록한 Bean(id="hikariConfig")을 참조(사용)&ndash;&gt;-->
-<!--        <constructor-arg ref="hikariConfig"/>-->
+        <!--생성자의 parameter로, 첫번째 등록한 Bean(id="hikariConfig")을 참조(사용)-->
+        <constructor-arg ref="hikariConfig"/>
     </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -41,9 +42,11 @@
 
 
     <!-- myBatis component-scan -->
-<!--    <mybatis-spring:scan base-package="org.zerock.mapper" />-->
+    <mybatis-spring:scan base-package="org.zerock.mapper" />
 
     <!-- component-scan -->
     <context:component-scan base-package="org.zerock.controller" />
+    <context:component-scan base-package="org.zerock.mapper" />
+    <context:component-scan base-package="org.zerock.service" />
 
 </beans>

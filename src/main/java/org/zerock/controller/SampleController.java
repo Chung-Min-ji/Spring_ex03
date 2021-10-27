@@ -1,6 +1,7 @@
 package org.zerock.controller;
 
 import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.zerock.domain.SampleVO;
 import org.zerock.domain.Ticket;
 
-import javax.print.attribute.standard.Media;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +101,7 @@ public class SampleController {
 
     @PostMapping("/ticket")
     public Ticket convert(@RequestBody Ticket ticket){
-        log.debug("convert(ticket) invoked.... ticket : " + ticket);
+        log.info("convert(ticket) invoked.... ticket : " + ticket);
 
         return ticket;
     } //convert
