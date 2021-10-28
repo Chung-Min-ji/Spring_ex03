@@ -81,6 +81,7 @@
 </div>
 <!-- /.row -->
 
+<!-- 댓글목록 시작-->
 <div class="row">
 
     <div class="col-lg-12">
@@ -90,6 +91,7 @@
             <div class="panel-heading">
                 <i class="fa fa-comments fa-fw"></i>
                 Reply
+                <button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">New Reply</button>
             </div>
         </div>
 
@@ -112,9 +114,50 @@
             <!-- /.end ul-->
         </div>
         <!-- /.panel .chat-panel -->
+
+        <div class="panel-footer">
+
+        </div>
+        <!-- /. pannel-footer -->
     </div>
 </div>
-<!-- ./end row -->
+<!-- ./end row : 댓글목록-->
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">REPLY MODAL</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Reply</label>
+                    <input class="form-control" name="reply" value="new Repl!!!!">
+                </div>
+                <div class="form-group">
+                    <label>Replyer</label>
+                    <input class="form-control" name="replyer" value="replyer">
+                </div>
+                <div class="form-group">
+                    <label>Reply Date</label>
+                    <input class="form-control" name="replyDate" value="">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="modalModBtn" type="button" class="btn btn-warning">Modify</button>
+                <button id="modalRemoveBtn" type="button" class="btn btn-danger">Remove</button>
+                <button id="modalRegisterBtn" type="button" class="btn btn-default" data-dismiss="modal">Register</button>
+                <button id="modalCloseBtn" type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 <%@include file="../includes/footer.jsp" %>
 
@@ -125,6 +168,8 @@
         console.log("get.js started.....");
         console.log("replyService : {}" , replyService);
 
+
+        //-------------- 수정/목록 클릭 이벤트
         var operForm = $("#operForm");
 
         var bnoValue = '<c:out value="${board.bno}"/>';
@@ -136,7 +181,6 @@
 
         }); //on click for modify
 
-
         $("button[data-oper='list']").on("click", function(e){
             operForm.find("#bno").remove();
             operForm.attr("action", "/board/list");
@@ -145,16 +189,29 @@
         }); //on click for list
 
 
+        //-------------- 댓글목록 보이기
+        // 댓글 목록 1페이지 보기
         showList(1);
 
         function showList(page){
-            replyService.getList({bno:bnoValue, page:page||1}, function(list){
+            console.log("show list : " + page);
+
+            replyService.getList({bno:bnoValue, page:page||1}, function(replyCnt, list){
+
+                console.log("replyCnt : {} " , replyCnt);
+                console.log("list: " + list);
+                console.log(list);
+
+                if(page == -1){
+                    pageNum = math.ceil(replyCnt / 10.0);
+                    showList(pageNum);
+
+                    return;
+                } //if : page번호가 -1로 전달되면, 마지막 페이지 찾아서 다시 호출.
 
                 var str="";
 
                 if(list==null || list.length == 0){
-                    replyUL.html("");
-
                     return;
                 } //if : 작성된 댓글이 없으면..
 
@@ -168,8 +225,170 @@
                 } //for
 
                 replyUL.html(str);
+
+                showReplyPage(replyCnt);
             }); //function
         }// showList
+
+
+        //----------------- 댓글 등록 모달
+        var modal = $(".modal");
+        var modalInputReply = modal.find("input[name='reply']");
+        var modalInputReplyer = modal.find("input[name='replyer']");
+        var modalInputReplyDate = modal.find("input[name='replyDate']");
+
+        var modalModBtn = $("#modalModBtn");
+        var modalRemoveBtn = $("#modalRemoveBtn");
+        var modalRegisterBtn = $("#modalRegisterBtn");
+
+
+        $("#addReplyBtn").on("click", function(e){
+
+            modal.find("input").val("");
+            modalInputReplyDate.closest("div").hide();
+            modal.find("button[id!='modalCloseBtn']").hide();
+
+            modalRegisterBtn.show();
+
+            $(".modal").modal("show");
+
+        }); // on click for addReplyBtn
+
+
+        modalRegisterBtn.on("click", function(e){
+            var reply = {
+                reply: modalInputReply.val(),
+                replyer: modalInputReplyer.val(),
+                bno: bnoValue
+            };
+
+            replyService.add(reply, function(result){
+
+                alert(result);
+
+                modal.find("input").val("");
+                modal.modal("hide");
+
+                // 새 댓글 등록 후, 댓글 목록 갱신
+                // showList(1);
+
+                // showList(-1) 호출하여 전체 댓글 숫자 파악하고, 다시 마지막 페이지를 호출해서 이동시킴.
+                showList(-1);
+            }); //add
+        }); //on click for modalRegisterBtn
+
+
+        //------------ 개별 댓글 클릭 이벤트 처리
+        $(".chat").on("click", "li", function(e){
+
+            var rno = $(this).data("rno");
+
+            replyService.get(rno, function(reply){
+                modalInputReply.val(reply.reply);
+                modalInputReplyer.val(reply.replyer);
+                modalInputReplyDate.val(replyService.displayTime(reply.replyDate))
+                    .attr("readonly", "readonly");
+                modal.data("rno", reply.rno);
+
+                modal.find("button[id != 'modalCloseBtn']").hide();
+                modalModBtn.show();
+                modalRemoveBtn.show();
+
+                $(".modal").modal("show");
+
+            }); //get
+        }); //on click for chat
+
+
+        modalModBtn.on("click", function(){
+            var reply = {
+                rno: modal.data("rno"),
+                reply: modalInputReply.val()
+            };
+
+            replyService.update(reply, function(result){
+
+                alert(result);
+                modal.modal("hide");
+                showList(pageNum);
+
+            }); //update
+        }); //on click for modalModBtn
+
+
+        modalRemoveBtn.on("click", function(){
+            var rno = modal.data("rno");
+
+            replyService.remove(rno, function(result){
+
+                alert(result);
+                modal.modal("hide");
+                showList(pageNum);
+            }); //remove
+        }); //on click for modalRemoveBtn
+
+
+        //--------------- 댓글 페이지 출력
+        var pageNum = 1;
+        var replyPageFooter = $(".panel-footer");
+
+        function showReplyPage(replyCnt){
+
+            var endNum = Math.ceil(pageNum / 10.0) * 10;
+            var startNum = endNum - 9;
+
+            var prev = startNum != 1;
+            var next = false;
+
+            if(endNum * 10 >= replyCnt){
+                endNum = Math.ceil(replyCnt / 10.0);
+            } //if
+
+            if(endNum * 10 < replyCnt){
+                next = true;
+            } //if
+
+            var str = "<ul class='pagination pull-right'>";
+
+            if(prev){
+                str += "<li class='page-item'><a class='page-link' href='"
+                    +(startNum -1) + "'>Previous</a></li>";
+            } //if
+
+            for(var i=startNum; i<=endNum; i++){
+                var active = pageNum == i? "active" : "";
+
+                str += "<li class='page-item"+active+"'><a class='page-link' href='"+i+"'>"+i+"</" +
+                    "a></li>";
+            } //for
+
+            if(next){
+                str += "<li class='page-item'><a class='page-link' href='" + (endNum+1)+"'>Next</a></li>";
+            } //if
+
+            str += "</ul></div>";
+
+            console.log("str : " + str);
+
+            replyPageFooter.html(str);
+        } //showReplyPage
+
+
+        //---------------- 댓글 페이지 이동
+        replyPageFooter.on("click", "li a", function(e){
+            e.preventDefault();
+
+            console.log("page click...");
+
+            var targetPageNum = $(this).attr("href");
+
+            console.log("targetPageNum: " + targetPageNum);
+
+            pageNum = targetPageNum;
+
+            showList(pageNum);
+        }); //on click for replyPageFooter
+
     }); //.jq
 
 

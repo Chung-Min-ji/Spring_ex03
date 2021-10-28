@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.domain.Criteria;
+import org.zerock.domain.ReplyPageDTO;
 import org.zerock.domain.ReplyVO;
 import org.zerock.service.ReplyService;
 
@@ -43,22 +44,22 @@ public class ReplyController {
     @GetMapping(value="/pages/{bno}/{page}",
         produces = {
             MediaType.APPLICATION_XML_VALUE,
-                MediaType.APPLICATION_JSON_VALUE
+            MediaType.APPLICATION_JSON_VALUE
         })
     // @PathVariable : 맵핑된 URL 경로에 {}로 처리된 부분에 바인딩 해준다.
         // @RequestParam은 localhost:8090/page=1&bno=1 의 형태로 전달된다면,
         // @PathVariable은 localhost:8090/1/1 의 형태로 전달됨.
         // 즉, 파라미터의 값과 이름을 함께 전달해야 할 때는 RequestParam 을 사용하고
         // RESP api에서 값을 호출할때는 주로 PathVariable을 사용한다.
-    public ResponseEntity<List<ReplyVO>> getList(@PathVariable("page") int page,
-                                                 @PathVariable("bno") Long bno){
+    public ResponseEntity<ReplyPageDTO> getList(@PathVariable("page") int page,
+                                                      @PathVariable("bno") Long bno){
         log.debug("getList({},{}) invoked.", page, bno);
 
         Criteria cri = new Criteria(page, 10);
 
         log.info("\t + cri : " + cri);
 
-        return new ResponseEntity<>(service.getList(cri, bno), HttpStatus.OK);
+        return new ResponseEntity<>(service.getListPage(cri, bno), HttpStatus.OK);
     } //getList
 
 

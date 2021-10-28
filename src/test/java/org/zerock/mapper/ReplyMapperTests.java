@@ -103,4 +103,18 @@ public class ReplyMapperTests {
         replies.forEach(reply -> log.info(reply));
     } //testList
 
+
+    @Test
+    public void testList2(){
+        log.debug("testList2() invoked.");
+
+        Criteria cri = new Criteria(1,10);
+
+        List<ReplyVO> replies = mapper.getListWithPaging(cri, 81l);
+
+        replies.forEach(
+                reply -> log.info(reply)
+        ); //forEach
+
+    } //testList2
 } //end class
