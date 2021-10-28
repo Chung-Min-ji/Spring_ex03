@@ -13,10 +13,7 @@
 </Appenders>
 
 <Loggers>
-    <Logger name="org.zerock.controller" level="debug" />
-    <Logger name="org.zerock.domain" level="debug" />
-    <Logger name="org.zerock.service" level="debug" />
-    <Logger name="org.zerock.mapper" level="debug" />
+    <Logger name="ex03" level="trace" />
 
     <Logger name="org.springframework.core" level="info" />
     <Logger name="org.springframework.beans" level="info" />

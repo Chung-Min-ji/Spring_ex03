@@ -62,10 +62,12 @@ public class ReplyServiceImpl implements ReplyService{
     public ReplyPageDTO getListPage(Criteria cri, Long bno){
         log.debug("getListPage({},{}) invoked.", cri, bno);
 
-        return new ReplyPageDTO(
-                mapper.getCountByBno(bno),
-                mapper.getListWithPaging(cri, bno)
-        ); //constructor
+        ReplyPageDTO dto = new ReplyPageDTO( mapper.getCountByBno(bno),
+                mapper.getListWithPaging(cri, bno));
+
+        log.info("\t + dto : {}" , dto);
+
+        return dto;
     } //getListPage
 
 } //end class
