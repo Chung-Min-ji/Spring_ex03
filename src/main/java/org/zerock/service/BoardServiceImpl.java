@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.zerock.domain.BoardVO;
 import org.zerock.domain.Criteria;
 import org.zerock.mapper.BoardMapper;
+import org.zerock.mapper.ReplyMapper;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BoardServiceImpl implements BoardService{
 
-    // 스프링 4.3 이후부터는 @Autowired 어노테이션 안붙여도 자동주입 됨.
+    // 스프링 4.3 이후부터는, 주입받으려는 필드가 하나일 때 어노테이션 안붙여도 자동주입 됨.
     @Setter(onMethod_ = @Autowired)
     private BoardMapper mapper;
 

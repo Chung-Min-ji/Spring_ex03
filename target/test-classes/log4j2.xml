@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<Configuration status="WARN" monitorInterval="30">
+<Configuration status="info" monitorInterval="30">
     <Properties>
         <Property name="LOG_PATTERN">%d{HH:mm:ss.SSS} %5p --- [%10.50t] %-1.50c{1.}.%-1.20M:%L: %m%n%ex</Property>
     </Properties>
@@ -10,15 +10,19 @@
     <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
         <PatternLayout pattern="${LOG_PATTERN}"/>
     </Console>
+
+    <File name="file" fileName="/Users/jeongminji/Etc/Temp/logging_test.log">
+        <PatternLayout pattern="${LOG_PATTERN}" />
+    </File>
 </Appenders>
 
 <Loggers>
-    <Logger name="ex03" level="trace" />
+    <Logger name="org.zerock" level="trace" />
 
     <Logger name="org.springframework.core" level="info" />
     <Logger name="org.springframework.beans" level="info" />
     <Logger name="org.springframework.context" level="info" />
-    <Logger name="org.springframework.web" level="info" />
+    <Logger name="org.springframework.web" level="info"/>
 
 
     <!-- ===============================================================================================  -->

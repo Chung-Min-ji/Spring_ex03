@@ -28,10 +28,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration({
         "file:src/main/webapp/WEB-INF/spring/*.xml",
         "file:src/main/webapp/WEB-INF/spring/*/*.xml"})
-@Log4j
+@Log4j2
 public class SampleControllerTests {
 
-    @Setter(onMethod_=@Autowired)
+    @Autowired
+//    @Setter(onMethod_=@Autowired)
     private WebApplicationContext ctx;
 
     private MockMvc mockMvc;

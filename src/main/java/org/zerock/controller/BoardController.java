@@ -18,6 +18,7 @@ import org.zerock.service.BoardService;
 @Log4j
 public class BoardController {
 
+    @Autowired
     @Setter(onMethod_ = @Autowired)
     private BoardService service;
 

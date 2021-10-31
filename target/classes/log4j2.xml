@@ -7,9 +7,9 @@
     </Properties>
 
     <Appenders>
-    <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
-        <PatternLayout pattern="${LOG_PATTERN}"/>
-    </Console>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
 </Appenders>
 
 <Loggers>

@@ -22,7 +22,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ReplyController {
 
-    @Setter(onMethod_=@Autowired)
+    @Autowired
+//    @Setter(onMethod_=@Autowired)
     private ReplyService service;
 
     @PostMapping(value="/new",
